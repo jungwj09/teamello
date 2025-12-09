@@ -1,13 +1,42 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { TypeAnimation } from "react-type-animation";
+import { getCurrentUser } from "@/lib/supabase";
+import { AuthModal } from "@/components/auth/AuthModal";
+
+interface User {
+  id: string;
+  email?: string;
+}
 
 export default function HomePage() {
+  const router = useRouter();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const currentUser = await getCurrentUser();
+      setUser(currentUser);
+    };
+
+    checkUser();
+  }, []);
+
+  const handleGetStarted = () => {
+    if (user) {
+      router.push("/dashboard");
+    } else {
+      setShowAuthModal(true);
+    }
+  };
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -42,11 +71,19 @@ export default function HomePage() {
         </p>
 
         <div className="flex items-center justify-center gap-3">
-          <Button className="text-[15px]">
+          <Button className="text-[15px]" onClick={handleGetStarted}>
             무료로 시작하기
             <Icon icon="mdi:arrow-right" className="text-xl" />
           </Button>
-          <Button variant="outline" className="text-[15px]">
+          <Button
+            variant="outline"
+            className="text-[15px]"
+            onClick={() => {
+              document
+                .getElementById("features")
+                ?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
             데모 보기
           </Button>
         </div>
@@ -251,7 +288,6 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-3 gap-6">
-          {/* Review 1 */}
           <Card className="p-8">
             <div className="flex gap-1 mb-4">
               {[...Array(5)].map((_, i) => (
@@ -274,7 +310,6 @@ export default function HomePage() {
             </div>
           </Card>
 
-          {/* Review 2 */}
           <Card className="p-8">
             <div className="flex gap-1 mb-4">
               {[...Array(5)].map((_, i) => (
@@ -344,7 +379,7 @@ export default function HomePage() {
           </p>
 
           <div className="flex items-center justify-center gap-3 mb-6">
-            <Button className="text-[15px]">
+            <Button className="text-[15px]" onClick={handleGetStarted}>
               지금 무료로 시작
               <Icon icon="mdi:arrow-right" className="text-xl" />
             </Button>
@@ -360,6 +395,12 @@ export default function HomePage() {
         </Card>
       </section>
       <Footer />
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        initialMode="signup"
+      />
     </div>
   );
 }
