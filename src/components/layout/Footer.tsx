@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200">
+    <footer className="bg-[#dee7f6] border-t border-gray-200">
       <div className="max-w-[1400px] mx-auto px-8 py-12">
         <div className="grid grid-cols-4 gap-2 mb-12">
           <div>
@@ -17,7 +17,7 @@ export function Footer() {
               />
             </div>
             <p className="text-[14px] text-gray-600">
-              학생들의 팀플 갈등을 AI로 예방하는 플랫폼
+              팀플 갈등 예방 지원 AI 플랫폼
             </p>
           </div>
 
