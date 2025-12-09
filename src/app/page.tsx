@@ -5,7 +5,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import Image from "next/image";
+import { TypeAnimation } from "react-type-animation";
 
 export default function HomePage() {
   return (
@@ -23,7 +23,15 @@ export default function HomePage() {
         </div>
 
         <h1 className="text-[64px] font-bold leading-tight mb-6">
-          팀플 갈등을 <span className="gradient-text">미리 예방하세요</span>
+          팀플 갈등을{" "}
+          <TypeAnimation
+            sequence={["미리 예방하세요", 5000]}
+            wrapper="span"
+            speed={3}
+            className="gradient-text"
+            repeat={0}
+            cursor={false}
+          />
         </h1>
 
         <p className="text-[18px] text-gray-600 leading-relaxed mb-12">
@@ -163,8 +171,8 @@ export default function HomePage() {
           </Card>
 
           <Card className="p-8 relative">
-            <div className="absolute top-6 right-6 w-3 h-3 bg-[#0056a4] rounded-full"></div>
-            <div className="text-[56px] font-bold text-[#0056a4] mb-4 leading-none">
+            <div className="absolute top-6 right-6 w-3 h-3 bg-[#748d00] rounded-full"></div>
+            <div className="text-[56px] font-bold text-[#748d00] mb-4 leading-none">
               02
             </div>
             <h3 className="text-[20px] font-bold mb-2">AI 진단</h3>
@@ -205,8 +213,8 @@ export default function HomePage() {
           </Card>
 
           <Card className="p-8 relative">
-            <div className="absolute top-6 right-6 w-3 h-3 bg-[#748d00] rounded-full"></div>
-            <div className="text-[56px] font-bold text-[#748d00] mb-4 leading-none">
+            <div className="absolute top-6 right-6 w-3 h-3 bg-[#0056a4] rounded-full"></div>
+            <div className="text-[56px] font-bold text-[#0056a4] mb-4 leading-none">
               05
             </div>
             <h3 className="text-[20px] font-bold mb-2">갈등 조기 감지</h3>
