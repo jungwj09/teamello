@@ -15,6 +15,53 @@ interface User {
   email?: string;
 }
 
+const faqData = [
+  {
+    question: "팀원이 설문을 안 하면 어떻게 되나요?",
+    answer:
+      "모든 팀원이 설문해야 AI 분석이 시작됩니다. 초대 링크 재전송이 가능하니 팀원이 설문을 안 했다면 초대 링크를 재전송하세요.",
+  },
+  {
+    question: "기여도는 어떤 기준으로 판단되나요?",
+    answer: "팀원의 기록 + 일정 데이터 + 소통 패턴을 종합 분석합니다.",
+  },
+  {
+    question: "감정 신호는 어떻게 파악하나요?",
+    answer:
+      "주간 체크인과 작업 패턴 기반입니다. 개인정보 내용은 수집하지 않습니다.",
+  },
+];
+
+function FAQAccordion() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  return (
+    <div className="max-w-3xl mx-auto space-y-4">
+      {faqData.map((faq, index) => (
+        <div key={index} className="border-b border-gray-200">
+          <button
+            onClick={() => setOpenIndex(openIndex === index ? null : index)}
+            className="w-full py-6 flex items-center justify-between text-left hover:opacity-80 transition-opacity"
+          >
+            <div className="flex items-center gap-4 flex-1">
+              <h3 className="text-[18px] font-bold">{faq.question}</h3>
+            </div>
+            <Icon
+              icon={openIndex === index ? "mdi:chevron-up" : "mdi:chevron-down"}
+              className="text-[28px] text-gray-400 flex-shrink-0"
+            />
+          </button>
+          {openIndex === index && (
+              <p className="text-[15px] text-gray-700 leading-relaxed">
+                {faq.answer}
+              </p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function HomePage() {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -54,20 +101,11 @@ export default function HomePage() {
         <h1 className="text-[64px] font-bold leading-tight mb-6">
           팀플 갈등을{" "}
           <TypeAnimation
-            sequence={[
-              "미리 예방하세요",
-              2000, 
-              "", 
-              500, 
-              "미리 예방하세요",
-              2000,
-              "",
-              500,
-            ]}
+            sequence={["미리 예방하세요", 5000]}
             wrapper="span"
-            speed={10}
+            speed={3}
             className="gradient-text"
-            repeat={Infinity}
+            repeat={0}
             cursor={false}
           />
         </h1>
@@ -308,8 +346,8 @@ export default function HomePage() {
               ))}
             </div>
             <p className="text-[15px] text-gray-700 leading-relaxed mb-6">
-              &quot;Teamello가 없었으면 저희 조가 완전히 흩어졌을 것 같아요. AI가
-              미리 저희들의 차이점을 알려줘서 갈등이 생기기 전에 대비할 수
+              &quot;Teamello가 없었으면 팀이 완전히 흩어졌을 것 같아요. AI가
+              미리 우리의 차이점을 알려줘서 갈등이 생기기 전에 대비할 수
               있었어요.&quot;
             </p>
             <div className="border-t border-gray-100 pt-4">
@@ -330,7 +368,7 @@ export default function HomePage() {
               ))}
             </div>
             <p className="text-[15px] text-gray-700 leading-relaxed mb-6">
-              &quot;팀장으로서 팀 관리가 정말 힘들었는데, Teamello의 데이터 기반
+              &quot;리더로서 팀 관리가 정말 힘들었는데, Teamello의 데이터 기반
               제안이 정말 도움됐습니다. 객관적 근거로 팀을 운영할 수 있게
               되었어요.&quot;
             </p>
@@ -352,7 +390,7 @@ export default function HomePage() {
               ))}
             </div>
             <p className="text-[15px] text-gray-700 leading-relaxed mb-6">
-              &quot;제 첫 팀프로젝트라서 불안했는데, Teamello의 설문과 피드백이
+              &quot;처음 팀프로젝트라서 불안했는데, Teamello의 설문과 피드백이
               저한테 역할을 명확하게 해줬어요. 심리적으로 훨씬 편했어요.&quot;
             </p>
             <div className="border-t border-gray-100 pt-4">
@@ -362,6 +400,17 @@ export default function HomePage() {
             </div>
           </Card>
         </div>
+      </section>
+
+      <section id="faq" className="max-w-[1400px] mx-auto px-8 py-24">
+        <div className="text-center mb-16">
+          <h2 className="text-[44px] font-bold mb-4">자주 묻는 질문</h2>
+          <p className="text-[18px] text-gray-600">
+            Teamello에 대해 궁금한 점을 확인하세요
+          </p>
+        </div>
+
+        <FAQAccordion />
       </section>
 
       {/* CTA */}

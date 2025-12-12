@@ -12,6 +12,15 @@ import Link from "next/link";
 interface User {
   id: string;
   email?: string;
+  user_metadata?: {
+    name?: string;
+  };
+}
+
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
 }
 
 interface Team {
@@ -25,6 +34,7 @@ interface Team {
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [teams, setTeams] = useState<Team[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -37,6 +47,15 @@ export default function DashboardPage() {
       }
 
       setUser(currentUser);
+
+      // users 테이블에서 프로필 정보 가져옴
+      const { data: profile } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", currentUser.id)
+        .single();
+
+      setUserProfile(profile);
 
       // 사용자 팀 로드
       const { data: teamMemberships } = await supabase
@@ -81,6 +100,12 @@ export default function DashboardPage() {
     );
   }
 
+  const userName =
+    userProfile?.name ||
+    user?.user_metadata?.name ||
+    user?.email?.split("@")[0] ||
+    "사용자";
+
   return (
     <div className="min-h-screen bg-[#fafafa]">
       <Header />
@@ -90,7 +115,7 @@ export default function DashboardPage() {
             <div>
               <h1 className="text-[32px] font-bold mb-1">대시보드</h1>
               <p className="text-[15px] text-gray-600">
-                안녕하세요, {user?.email}님 👋
+                안녕하세요, {userName} 님 👋
               </p>
             </div>
             <Link href="/team/create">
@@ -215,38 +240,48 @@ export default function DashboardPage() {
         <div className="mt-12">
           <h2 className="text-[24px] font-bold mb-4">빠른 시작</h2>
           <div className="grid grid-cols-3 gap-6">
-            <Card className="p-6 hover:border-[#0056a4] transition-colors cursor-pointer">
-              <Icon
-                icon="mdi:file-document"
-                className="text-[40px] text-[#0056a4] mb-3"
-              />
-              <h3 className="text-[18px] font-bold mb-2">가이드 보기</h3>
-              <p className="text-[14px] text-gray-600">
-                Teamello 사용법과 팁을 확인하세요
-              </p>
-            </Card>
+            <Link
+              href="https://paint-friday-cd7.notion.site/Teamello-2c7cfa4b4e0d802583f9d903337a0e66"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Card className="p-6 hover:border-[#0056a4] transition-colors cursor-pointer">
+                <Icon
+                  icon="mdi:file-document"
+                  className="text-[40px] text-[#0056a4] mb-3"
+                />
+                <h3 className="text-[18px] font-bold mb-2">가이드 보기</h3>
+                <p className="text-[14px] text-gray-600">
+                  Teamello 사용법과 팁을 확인하세요
+                </p>
+              </Card>
+            </Link>
 
-            <Card className="p-6 hover:border-[#748d00] transition-colors cursor-pointer">
-              <Icon
-                icon="mdi:chat-question"
-                className="text-[40px] text-[#748d00] mb-3"
-              />
-              <h3 className="text-[18px] font-bold mb-2">FAQ</h3>
-              <p className="text-[14px] text-gray-600">
-                자주 묻는 질문들을 확인하세요
-              </p>
-            </Card>
+            <Link href="/#faq">
+              <Card className="p-6 hover:border-[#748d00] transition-colors cursor-pointer">
+                <Icon
+                  icon="mdi:chat-question"
+                  className="text-[40px] text-[#748d00] mb-3"
+                />
+                <h3 className="text-[18px] font-bold mb-2">FAQ</h3>
+                <p className="text-[14px] text-gray-600">
+                  자주 묻는 질문들을 확인하세요
+                </p>
+              </Card>
+            </Link>
 
-            <Card className="p-6 hover:border-[#0056a4] transition-colors cursor-pointer">
-              <Icon
-                icon="mdi:email"
-                className="text-[40px] text-[#0056a4] mb-3"
-              />
-              <h3 className="text-[18px] font-bold mb-2">문의하기</h3>
-              <p className="text-[14px] text-gray-600">
-                도움이 필요하신가요? 언제든 연락주세요
-              </p>
-            </Card>
+            <Link href="https://www.instagram.com/woox1jin_/" target="_blank">
+              <Card className="p-6 hover:border-[#0056a4] transition-colors cursor-pointer">
+                <Icon
+                  icon="mdi:email"
+                  className="text-[40px] text-[#0056a4] mb-3"
+                />
+                <h3 className="text-[18px] font-bold mb-2">문의하기</h3>
+                <p className="text-[14px] text-gray-600">
+                  도움이 필요하신가요? 언제든 연락주세요
+                </p>
+              </Card>
+            </Link>
           </div>
         </div>
       </div>
