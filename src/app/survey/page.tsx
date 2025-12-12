@@ -1,4 +1,6 @@
 "use client";
+export const dynamic = "force-dynamic";
+
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase, getCurrentUser } from "@/lib/supabase";
@@ -110,7 +112,7 @@ interface SurveyAnswers {
   strengths: string[];
 }
 
-export default function SurveyPage() {
+function SurveyContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const teamId = searchParams.get("teamId");
@@ -313,5 +315,25 @@ export default function SurveyPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function SurveyPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#fafafa] py-12 flex items-center justify-center">
+          <div className="text-center">
+            <Icon
+              icon="mdi:loading"
+              className="text-[48px] text-[#0056a4] animate-spin mx-auto mb-4"
+            />
+            <p className="text-[15px] text-gray-600">로딩 중...</p>
+          </div>
+        </div>
+      }
+    >
+      <SurveyContent />
+    </Suspense>
   );
 }
