@@ -5,20 +5,23 @@ import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Icon } from "@iconify/react";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import {
   TeamAnalysis,
   RiskFactor,
   Recommendation,
   RoleSuggestion,
 } from "@/types/analysis";
+import { Team, TeamMember } from "@/types/team";
+import { downloadPDFReport } from "@/lib/pdf";
 
-interface Team {
+interface CheckInData {
   id: string;
-  name: string;
-}
-
-interface TeamMember {
-  user_id: string;
+  mood: string;
+  progress: number;
+  challenges: string;
+  created_at: string;
   user?: {
     name: string;
   };
@@ -31,11 +34,11 @@ export default function AnalysisPage() {
   const [analysis, setAnalysis] = useState<TeamAnalysis | null>(null);
   const [team, setTeam] = useState<Team | null>(null);
   const [members, setMembers] = useState<TeamMember[]>([]);
+  const [checkins, setCheckins] = useState<CheckInData[]>([]);
   const [loading, setLoading] = useState(true);
 
   const loadAnalysis = useCallback(async () => {
     try {
-      // 팀 로드
       const { data: teamData } = await supabase
         .from("teams")
         .select("*")
@@ -43,14 +46,18 @@ export default function AnalysisPage() {
         .single();
       setTeam(teamData);
 
-      // 멤버 로드
       const { data: membersData } = await supabase
         .from("team_members")
-        .select(`*, user:users(name)`)
+        .select(`*, user:users(name, email)`)
         .eq("team_id", teamId);
       setMembers(membersData || []);
 
-      // 가장 최근 분석 로드
+      const { data: checkinsData } = await supabase
+        .from("checkins")
+        .select(`*, user:users(name)`)
+        .eq("team_id", teamId);
+      setCheckins(checkinsData || []);
+
       const { data: analysisData } = await supabase
         .from("team_analysis")
         .select("*")
@@ -70,6 +77,11 @@ export default function AnalysisPage() {
   useEffect(() => {
     loadAnalysis();
   }, [loadAnalysis]);
+
+  const handleDownloadPDF = () => {
+    if (!team || !analysis) return;
+    downloadPDFReport(team, analysis, members, checkins);
+  };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -132,6 +144,7 @@ export default function AnalysisPage() {
 
   return (
     <div className="min-h-screen bg-[#fafafa]">
+      <Header />
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-[1400px] mx-auto px-8 py-6">
           <div className="flex items-center justify-between">
@@ -140,7 +153,7 @@ export default function AnalysisPage() {
               <p className="text-[15px] text-gray-600">{team?.name}</p>
             </div>
             <div className="flex gap-3">
-              <Button variant="outline">
+              <Button variant="outline" onClick={handleDownloadPDF}>
                 <Icon icon="mdi:download" className="text-xl" />
                 PDF 다운로드
               </Button>
@@ -349,6 +362,7 @@ export default function AnalysisPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

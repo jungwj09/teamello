@@ -15,6 +15,53 @@ interface User {
   email?: string;
 }
 
+const faqData = [
+  {
+    question: "팀원이 설문을 안 하면 어떻게 되나요?",
+    answer:
+      "모든 팀원이 설문해야 AI 분석이 시작됩니다. 초대 링크 재전송이 가능하니 팀원이 설문을 안 했다면 초대 링크를 재전송하세요.",
+  },
+  {
+    question: "기여도는 어떤 기준으로 판단되나요?",
+    answer: "팀원의 기록 + 일정 데이터 + 소통 패턴을 종합 분석합니다.",
+  },
+  {
+    question: "감정 신호는 어떻게 파악하나요?",
+    answer:
+      "주간 체크인과 작업 패턴 기반입니다. 개인정보 내용은 수집하지 않습니다.",
+  },
+];
+
+function FAQAccordion() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  return (
+    <div className="max-w-3xl mx-auto space-y-4">
+      {faqData.map((faq, index) => (
+        <div key={index} className="border-b border-gray-200">
+          <button
+            onClick={() => setOpenIndex(openIndex === index ? null : index)}
+            className="w-full py-6 flex items-center justify-between text-left hover:opacity-80 transition-opacity"
+          >
+            <div className="flex items-center gap-4 flex-1">
+              <h3 className="text-[18px] font-bold">{faq.question}</h3>
+            </div>
+            <Icon
+              icon={openIndex === index ? "mdi:chevron-up" : "mdi:chevron-down"}
+              className="text-[28px] text-gray-400 flex-shrink-0"
+            />
+          </button>
+          {openIndex === index && (
+              <p className="text-[15px] text-gray-700 leading-relaxed">
+                {faq.answer}
+              </p>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function HomePage() {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -353,6 +400,17 @@ export default function HomePage() {
             </div>
           </Card>
         </div>
+      </section>
+
+      <section id="faq" className="max-w-[1400px] mx-auto px-8 py-24">
+        <div className="text-center mb-16">
+          <h2 className="text-[44px] font-bold mb-4">자주 묻는 질문</h2>
+          <p className="text-[18px] text-gray-600">
+            Teamello에 대해 궁금한 점을 확인하세요
+          </p>
+        </div>
+
+        <FAQAccordion />
       </section>
 
       {/* CTA */}
