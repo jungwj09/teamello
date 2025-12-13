@@ -113,7 +113,8 @@ export function Footer() {
         </div>
 
         <div className="text-center text-[13px] text-gray-500 border-t pt-6">
-          © {new Date().getFullYear()} Teamello. All rights reserved.
+          © {new Date().getFullYear()} Teamello. All rights reserved. <br />
+          Making teams mellow, before conflicts begin.
         </div>
       </div>
     </footer>
