@@ -156,10 +156,6 @@ export default function TeamDashboard() {
             </div>
             <div className="flex gap-3">
               <Button variant="outline">
-                <Icon icon="mdi:account-multiple-plus" className="text-xl" />
-                팀원 초대
-              </Button>
-              <Button variant="outline">
                 <Icon icon="mdi:cog" className="text-xl" />
                 설정
               </Button>
@@ -285,7 +281,7 @@ export default function TeamDashboard() {
                   />
                   <h3 className="text-[18px] font-bold mb-2">팀원 관리</h3>
                   <p className="text-[14px] text-gray-600">
-                    역할 배정과 기여도 확인
+                    역할 배정과 기여도 확인 및 팀원 초대
                   </p>
                 </Card>
               </Link>
