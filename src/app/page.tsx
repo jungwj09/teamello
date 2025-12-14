@@ -87,7 +87,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="h-30"></div>
+      <div className="h-35"></div>
 
       {/* Hero */}
       <section className="max-w-[1400px] mx-auto px-8 pt-28 pb-32 text-center">
