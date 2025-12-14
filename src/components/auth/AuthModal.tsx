@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { signIn, signUp } from "@/lib/supabase";
 import { Button } from "@/components/ui/Button";
@@ -26,6 +26,11 @@ export function AuthModal({
     password: "",
     name: "",
   });
+
+  useEffect(() => {
+    setMode(initialMode);
+    setError(""); 
+  }, [initialMode]);
 
   if (!isOpen) return null;
 
