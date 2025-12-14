@@ -36,6 +36,7 @@ export default function MembersPage() {
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("member");
   const [inviting, setInviting] = useState(false);
+  const [inviteLink, setInviteLink] = useState("");
 
   const loadData = useCallback(async () => {
     try {
@@ -71,22 +72,47 @@ export default function MembersPage() {
     loadData();
   }, [loadData]);
 
+  // 초대 링크 생성
+  const generateInviteLink = () => {
+    const baseUrl = window.location.origin;
+    const link = `${baseUrl}/team/${teamId}`;
+    setInviteLink(link);
+  };
+
   const handleInvite = async () => {
     if (!inviteEmail) return;
     setInviting(true);
 
     try {
+      // 1. 해당 이메일의 사용자가 존재하는지 확인
       const { data: invitedUser } = await supabase
         .from("users")
-        .select("id")
+        .select("id, email, name")
         .eq("email", inviteEmail)
         .single();
 
       if (!invitedUser) {
-        alert("해당 이메일의 사용자를 찾을 수 없습니다");
+        alert(
+          `${inviteEmail}은 아직 Teamello에 가입하지 않았습니다.\n\n초대 링크를 복사하여 직접 전달해주세요:\n${window.location.origin}/team/${teamId}`,
+        );
+        generateInviteLink();
         return;
       }
 
+      // 2. 이미 팀에 속해있는지 확인
+      const { data: existingMember } = await supabase
+        .from("team_members")
+        .select("id")
+        .eq("team_id", teamId)
+        .eq("user_id", invitedUser.id)
+        .single();
+
+      if (existingMember) {
+        alert("이미 팀에 참여한 사용자입니다");
+        return;
+      }
+
+      // 3. 팀원 추가
       const { error } = await supabase.from("team_members").insert([
         {
           team_id: teamId,
@@ -95,16 +121,12 @@ export default function MembersPage() {
         },
       ]);
 
-      if (error) {
-        if (error.message.includes("duplicate")) {
-          alert("이미 팀에 참여한 사용자입니다");
-        } else {
-          throw error;
-        }
-        return;
-      }
+      if (error) throw error;
 
-      alert("팀원이 추가되었습니다!");
+      alert(
+        `✅ ${invitedUser.name || invitedUser.email}님을 팀에 추가했습니다!\n\n이메일 또는 메신저로 다음 링크를 전달하세요:\n${window.location.origin}/team/${teamId}`,
+      );
+
       setShowInviteModal(false);
       setInviteEmail("");
       setInviteRole("member");
@@ -115,6 +137,12 @@ export default function MembersPage() {
     } finally {
       setInviting(false);
     }
+  };
+
+  const copyInviteLink = () => {
+    const link = `${window.location.origin}/team/${teamId}`;
+    navigator.clipboard.writeText(link);
+    alert("✅ 초대 링크가 복사되었습니다!\n팀원에게 전달해주세요.");
   };
 
   const handleRemoveMember = async (memberId: string) => {
@@ -181,15 +209,44 @@ export default function MembersPage() {
               <h1 className="text-[32px] font-bold mb-1">팀원 관리</h1>
               <p className="text-[15px] text-gray-600">{team?.name}</p>
             </div>
-            <Button onClick={() => setShowInviteModal(true)}>
-              <Icon icon="mdi:account-multiple-plus" className="text-xl" />
-              팀원 초대
-            </Button>
+            <div className="flex gap-3">
+              <Button variant="outline" onClick={copyInviteLink}>
+                <Icon icon="mdi:link" className="text-xl" />
+                초대 링크 복사
+              </Button>
+              <Button onClick={() => setShowInviteModal(true)}>
+                <Icon icon="mdi:account-multiple-plus" className="text-xl" />
+                팀원 초대
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="max-w-[1400px] mx-auto px-8 py-8">
+        {/* 초대 안내 카드 */}
+        <Card className="p-6 mb-6 bg-blue-50 border-blue-200">
+          <div className="flex items-start gap-4">
+            <Icon
+              icon="mdi:information"
+              className="text-[32px] text-[#0056a4] flex-shrink-0"
+            />
+            <div className="flex-1">
+              <h3 className="text-[16px] font-bold mb-2">팀원 초대 방법</h3>
+              <ol className="text-[14px] text-gray-700 space-y-1 ml-4">
+                <li>
+                  1. &quot;초대 링크 복사&quot; 버튼을 클릭하여 링크를
+                  복사합니다
+                </li>
+                <li>2. 카카오톡, 이메일 등으로 팀원에게 링크를 전달합니다</li>
+                <li>
+                  3. 팀원이 Teamello에 가입 후 링크를 통해 팀에 참여합니다
+                </li>
+              </ol>
+            </div>
+          </div>
+        </Card>
+
         <div className="grid grid-cols-1 gap-4">
           {members.map((member) => {
             const survey = getMemberSurvey(member.user_id);
@@ -308,6 +365,7 @@ export default function MembersPage() {
         </div>
       </div>
 
+      {/* 초대 모달 */}
       {showInviteModal && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
@@ -319,47 +377,68 @@ export default function MembersPage() {
             <h2 className="text-[24px] font-bold mb-6">팀원 초대</h2>
 
             <div className="space-y-4">
-              <div>
-                <label className="block text-[14px] font-medium text-gray-900 mb-2">
-                  이메일
-                </label>
+              {/* 방법 1: 이메일로 직접 추가 */}
+              <div className="p-4 bg-blue-50 rounded-lg">
+                <h3 className="text-[15px] font-bold mb-2">
+                  📧 방법 1: 이미 가입한 팀원 추가
+                </h3>
+                <p className="text-[13px] text-gray-600 mb-3">
+                  Teamello에 이미 가입한 팀원의 이메일을 입력하세요
+                </p>
                 <input
                   type="email"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0056a4] text-[15px]"
-                  placeholder="팀원의 이메일을 입력하세요"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0056a4] text-[15px] mb-2"
+                  placeholder="예: teamate@example.com"
                 />
-              </div>
-
-              <div>
-                <label className="block text-[14px] font-medium text-gray-900 mb-2">
-                  역할
-                </label>
                 <select
                   value={inviteRole}
                   onChange={(e) => setInviteRole(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0056a4] text-[15px]"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0056a4] text-[15px] mb-3"
                 >
                   <option value="member">멤버</option>
                   <option value="leader">리더</option>
                 </select>
+                <Button
+                  onClick={handleInvite}
+                  disabled={!inviteEmail || inviting}
+                  className="w-full"
+                >
+                  {inviting ? "추가 중..." : "팀원 추가"}
+                  <Icon icon="mdi:account-plus" className="text-xl" />
+                </Button>
+              </div>
+
+              {/* 방법 2: 링크로 초대 */}
+              <div className="p-4 bg-green-50 rounded-lg">
+                <h3 className="text-[15px] font-bold mb-2">
+                  🔗 방법 2: 초대 링크 전달
+                </h3>
+                <p className="text-[13px] text-gray-600 mb-3">
+                  링크를 복사하여 카카오톡, 이메일 등으로 전달하세요
+                </p>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={`${window.location.origin}/team/${teamId}`}
+                    readOnly
+                    className="flex-1 px-4 py-2 bg-white border border-gray-200 rounded-lg text-[13px] text-gray-600"
+                  />
+                  <Button variant="outline" onClick={copyInviteLink}>
+                    <Icon icon="mdi:content-copy" className="text-xl" />
+                    복사
+                  </Button>
+                </div>
               </div>
 
               <div className="flex gap-3 pt-4">
                 <Button
-                  onClick={handleInvite}
-                  disabled={!inviteEmail || inviting}
-                  className="flex-1"
-                >
-                  {inviting ? "초대 중..." : "초대하기"}
-                  <Icon icon="mdi:send" className="text-xl" />
-                </Button>
-                <Button
                   variant="outline"
                   onClick={() => setShowInviteModal(false)}
+                  className="flex-1"
                 >
-                  취소
+                  닫기
                 </Button>
               </div>
             </div>
