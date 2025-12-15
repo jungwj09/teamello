@@ -183,21 +183,26 @@ function SurveyContent() {
     : undefined;
 
   return (
-    <div className="min-h-screen bg-[#fafafa] py-12">
-      <div className="max-w-3xl mx-auto px-8">
+    <div className="min-h-screen bg-[#fafafa] py-6 md:py-12 px-4 md:px-8 mb-16 md:mb-0">
+      <div className="max-w-3xl mx-auto">
         <button
           onClick={() => router.back()}
-          className="mb-6 inline-flex items-center gap-2 text-gray-700 hover:text-gray-900"
+          className="mb-4 md:mb-6 inline-flex items-center gap-2 text-gray-700 hover:text-gray-900"
         >
-          <Icon icon="weui:back-filled" width={26} height={26} />
-          <span className="text-[15px] font-medium">뒤로</span>
+          <Icon
+            icon="weui:back-filled"
+            width={22}
+            height={22}
+            className="md:w-[26px] md:h-[26px]"
+          />
+          <span className="text-[14px] md:text-[15px] font-medium">뒤로</span>
         </button>
-        <div className="mb-8">
+        <div className="mb-6 md:mb-8">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[14px] text-gray-600">
+            <span className="text-[13px] md:text-[14px] text-gray-600">
               {step + 1} / {questions.length + 1}
             </span>
-            <span className="text-[14px] font-medium text-[#0056a4]">
+            <span className="text-[13px] md:text-[14px] font-medium text-[#0056a4]">
               {Math.round(progress)}%
             </span>
           </div>
@@ -209,19 +214,19 @@ function SurveyContent() {
           </div>
         </div>
 
-        <Card className="p-10">
+        <Card className="p-6 md:p-10">
           {!isLastStep ? (
             <>
-              <div className="mb-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-full mb-4">
-                  <span className="text-[13px] text-[#0056a4] font-medium">
+              <div className="mb-6 md:mb-8">
+                <div className="inline-flex items-center gap-2 px-2.5 md:px-3 py-1 bg-blue-50 rounded-full mb-3 md:mb-4">
+                  <span className="text-[12px] md:text-[13px] text-[#0056a4] font-medium">
                     {currentQuestion.title}
                   </span>
                 </div>
-                <h2 className="text-[32px] font-bold mb-3">
+                <h2 className="text-[24px] md:text-[32px] font-bold mb-2 md:mb-3">
                   {currentQuestion.question}
                 </h2>
-                <p className="text-[15px] text-gray-600">
+                <p className="text-[14px] md:text-[15px] text-gray-600">
                   가장 편하게 느껴지는 방식을 선택해주세요
                 </p>
               </div>
@@ -231,25 +236,29 @@ function SurveyContent() {
                   <button
                     key={option.value}
                     onClick={() => handleAnswer(option.value)}
-                    className={`w-full p-5 border-2 rounded-lg text-left transition-all ${
+                    className={`w-full p-4 md:p-5 border-2 rounded-lg text-left transition-all ${
                       currentAnswerValue === option.value
                         ? "border-[#0056a4] bg-blue-50"
                         : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
-                    <div className="text-[18px] font-bold mb-1">
+                    <div className="text-[16px] md:text-[18px] font-bold mb-1">
                       {option.label}
                     </div>
-                    <div className="text-[14px] text-gray-600">
+                    <div className="text-[13px] md:text-[14px] text-gray-600">
                       {option.desc}
                     </div>
                   </button>
                 ))}
               </div>
 
-              <div className="flex gap-3 mt-8">
+              <div className="flex flex-col md:flex-row gap-3 mt-6 md:mt-8">
                 {step > 0 && (
-                  <Button variant="outline" onClick={() => setStep(step - 1)}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setStep(step - 1)}
+                    className="w-full md:w-auto"
+                  >
                     <Icon icon="mdi:arrow-left" className="text-xl" />
                     이전
                   </Button>
@@ -266,26 +275,26 @@ function SurveyContent() {
             </>
           ) : (
             <>
-              <div className="mb-8">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-50 rounded-full mb-4">
-                  <span className="text-[13px] text-[#0056a4] font-medium">
+              <div className="mb-6 md:mb-8">
+                <div className="inline-flex items-center gap-2 px-2.5 md:px-3 py-1 bg-blue-50 rounded-full mb-3 md:mb-4">
+                  <span className="text-[12px] md:text-[13px] text-[#0056a4] font-medium">
                     마지막 질문
                   </span>
                 </div>
-                <h2 className="text-[32px] font-bold mb-3">
+                <h2 className="text-[24px] md:text-[32px] font-bold mb-2 md:mb-3">
                   당신의 강점은 무엇인가요?
                 </h2>
-                <p className="text-[15px] text-gray-600">
+                <p className="text-[14px] md:text-[15px] text-gray-600">
                   팀에서 잘할 수 있는 영역을 모두 선택해주세요 (복수 선택 가능)
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-2.5 md:gap-3">
                 {strengthOptions.map((strength) => (
                   <button
                     key={strength}
                     onClick={() => handleStrengthToggle(strength)}
-                    className={`p-4 border-2 rounded-lg text-[15px] font-medium transition-all ${
+                    className={`p-3 md:p-4 border-2 rounded-lg text-[14px] md:text-[15px] font-medium transition-all ${
                       (answers.strengths || []).includes(strength)
                         ? "border-[#0056a4] bg-blue-50 text-[#0056a4]"
                         : "border-gray-200 hover:border-gray-300"
@@ -296,8 +305,12 @@ function SurveyContent() {
                 ))}
               </div>
 
-              <div className="flex gap-3 mt-8">
-                <Button variant="outline" onClick={() => setStep(step - 1)}>
+              <div className="flex flex-col md:flex-row gap-3 mt-6 md:mt-8">
+                <Button
+                  variant="outline"
+                  onClick={() => setStep(step - 1)}
+                  className="w-full md:w-auto"
+                >
                   <Icon icon="mdi:arrow-left" className="text-xl" />
                   이전
                 </Button>
@@ -322,13 +335,15 @@ export default function SurveyPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#fafafa] py-12 flex items-center justify-center">
+        <div className="min-h-screen bg-[#fafafa] py-12 flex items-center justify-center px-4">
           <div className="text-center">
             <Icon
               icon="mdi:loading"
-              className="text-[48px] text-[#0056a4] animate-spin mx-auto mb-4"
+              className="text-[40px] md:text-[48px] text-[#0056a4] animate-spin mx-auto mb-4"
             />
-            <p className="text-[15px] text-gray-600">로딩 중...</p>
+            <p className="text-[14px] md:text-[15px] text-gray-600">
+              로딩 중...
+            </p>
           </div>
         </div>
       }

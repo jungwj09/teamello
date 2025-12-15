@@ -92,9 +92,9 @@ export default function DashboardPage() {
         <div className="text-center">
           <Icon
             icon="mdi:loading"
-            className="text-[48px] text-[#0056a4] animate-spin mx-auto mb-4"
+            className="text-[40px] md:text-[48px] text-[#0056a4] animate-spin mx-auto mb-4"
           />
-          <p className="text-[15px] text-gray-600">로딩 중...</p>
+          <p className="text-[14px] md:text-[15px] text-gray-600">로딩 중...</p>
         </div>
       </div>
     );
@@ -110,16 +110,18 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-[#fafafa]">
       <Header />
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-[1400px] mx-auto px-8 py-6">
-          <div className="flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-4 md:py-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-[32px] font-bold mb-1">대시보드</h1>
-              <p className="text-[15px] text-gray-600">
+              <h1 className="text-[24px] md:text-[32px] font-bold mb-1">
+                대시보드
+              </h1>
+              <p className="text-[14px] md:text-[15px] text-gray-600">
                 안녕하세요, {userName} 님 👋
               </p>
             </div>
             <Link href="/team/create">
-              <Button>
+              <Button className="w-full md:w-auto">
                 <Icon icon="mdi:plus" className="text-xl" />새 팀 만들기
               </Button>
             </Link>
@@ -127,105 +129,116 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="max-w-[1400px] mx-auto px-8 py-8">
-        <div className="grid grid-cols-3 gap-6 mb-8">
-          <Card className="p-6">
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-6 md:py-8 mb-16 md:mb-0">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 mb-6 md:mb-8">
+          <Card className="p-5 md:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[32px] font-bold text-[#0056a4] mb-1">
+                <div className="text-[28px] md:text-[32px] font-bold text-[#0056a4] mb-1">
                   {teams.length}
                 </div>
-                <div className="text-[14px] text-gray-600">참여중인 팀</div>
+                <div className="text-[13px] md:text-[14px] text-gray-600">
+                  참여중인 팀
+                </div>
               </div>
               <Icon
                 icon="mdi:account-group"
-                className="text-[48px] text-[#0056a4] opacity-20"
+                className="text-[40px] md:text-[48px] text-[#0056a4] opacity-20"
               />
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-5 md:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[32px] font-bold text-[#748d00] mb-1">
+                <div className="text-[28px] md:text-[32px] font-bold text-[#748d00] mb-1">
                   {teams.filter((t) => t.user_role === "leader").length}
                 </div>
-                <div className="text-[14px] text-gray-600">리더 역할</div>
+                <div className="text-[13px] md:text-[14px] text-gray-600">
+                  리더 역할
+                </div>
               </div>
               <Icon
                 icon="mdi:crown"
-                className="text-[48px] text-[#748d00] opacity-20"
+                className="text-[40px] md:text-[48px] text-[#748d00] opacity-20"
               />
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-5 md:p-6">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[32px] font-bold text-[#0056a4] mb-1">
+                <div className="text-[28px] md:text-[32px] font-bold text-[#0056a4] mb-1">
                   100%
                 </div>
-                <div className="text-[14px] text-gray-600">설문 완료율</div>
+                <div className="text-[13px] md:text-[14px] text-gray-600">
+                  설문 완료율
+                </div>
               </div>
               <Icon
                 icon="mdi:check-circle"
-                className="text-[48px] text-[#0056a4] opacity-20"
+                className="text-[40px] md:text-[48px] text-[#0056a4] opacity-20"
               />
             </div>
           </Card>
         </div>
 
-        <div className="mb-6">
-          <h2 className="text-[24px] font-bold mb-4">내 팀</h2>
+        <div className="mb-4 md:mb-6">
+          <h2 className="text-[20px] md:text-[24px] font-bold">내 팀</h2>
         </div>
 
         {teams.length === 0 ? (
-          <Card className="p-12 text-center">
+          <Card className="p-8 md:p-12 text-center">
             <Icon
               icon="mdi:account-group-outline"
-              className="text-[64px] text-gray-400 mx-auto mb-4"
+              className="text-[56px] md:text-[64px] text-gray-400 mx-auto mb-4"
             />
-            <h3 className="text-[20px] font-bold mb-2">아직 팀이 없습니다</h3>
-            <p className="text-[15px] text-gray-600 mb-6">
+            <h3 className="text-[18px] md:text-[20px] font-bold mb-2">
+              아직 팀이 없습니다
+            </h3>
+            <p className="text-[14px] md:text-[15px] text-gray-600 mb-6">
               새로운 팀을 만들거나 초대를 받아보세요
             </p>
             <Link href="/team/create">
-              <Button>
+              <Button className="w-full md:w-auto">
                 <Icon icon="mdi:plus" className="text-xl" />첫 팀 만들기
               </Button>
             </Link>
           </Card>
         ) : (
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             {teams.map((team) => (
               <Link key={team.id} href={`/team/${team.id}`}>
-                <Card className="p-6 hover:border-[#0056a4] transition-all cursor-pointer h-full">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-[20px] font-bold mb-2">
+                <Card className="p-5 md:p-6 hover:border-[#0056a4] transition-all cursor-pointer h-full">
+                  <div className="flex items-start justify-between mb-3 md:mb-4">
+                    <div className="flex-1 pr-2">
+                      <h3 className="text-[18px] md:text-[20px] font-bold mb-2">
                         {team.name}
                       </h3>
-                      <p className="text-[14px] text-gray-600 line-clamp-2">
+                      <p className="text-[13px] md:text-[14px] text-gray-600 line-clamp-2">
                         {team.description || "팀 설명이 없습니다"}
                       </p>
                     </div>
                     {team.user_role === "leader" && (
-                      <span className="px-3 py-1 bg-[#748d00] text-white text-[12px] font-medium rounded-full flex-shrink-0">
+                      <span className="px-2.5 md:px-3 py-1 bg-[#748d00] text-white text-[11px] md:text-[12px] font-medium rounded-full flex-shrink-0">
                         리더
                       </span>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-4 pt-4 border-t border-gray-100">
-                    <div className="flex items-center gap-2 text-[13px] text-gray-600">
+                  <div className="flex items-center gap-3 md:gap-4 pt-3 md:pt-4 border-t border-gray-100">
+                    <div className="flex items-center gap-2 text-[12px] md:text-[13px] text-gray-600">
                       <Icon
                         icon="mdi:account-multiple"
-                        className="text-[18px]"
+                        className="text-[16px] md:text-[18px]"
                       />
                       <span>팀원</span>
                     </div>
-                    <div className="flex items-center gap-2 text-[13px] text-gray-600">
-                      <Icon icon="mdi:calendar" className="text-[18px]" />
+                    <div className="flex items-center gap-2 text-[12px] md:text-[13px] text-gray-600">
+                      <Icon
+                        icon="mdi:calendar"
+                        className="text-[16px] md:text-[18px]"
+                      />
                       <span>
                         {new Date(team.created_at).toLocaleDateString("ko-KR")}
                       </span>
@@ -237,47 +250,55 @@ export default function DashboardPage() {
           </div>
         )}
 
-        <div className="mt-12">
-          <h2 className="text-[24px] font-bold mb-4">빠른 시작</h2>
-          <div className="grid grid-cols-3 gap-6">
+        <div className="mt-8 md:mt-12">
+          <h2 className="text-[20px] md:text-[24px] font-bold mb-4">
+            빠른 시작
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
             <Link
               href="https://paint-friday-cd7.notion.site/Teamello-2c7cfa4b4e0d802583f9d903337a0e66"
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Card className="p-6 hover:border-[#0056a4] transition-colors cursor-pointer">
+              <Card className="p-5 md:p-6 hover:border-[#0056a4] transition-colors cursor-pointer">
                 <Icon
                   icon="mdi:file-document"
-                  className="text-[40px] text-[#0056a4] mb-3"
+                  className="text-[36px] md:text-[40px] text-[#0056a4] mb-3"
                 />
-                <h3 className="text-[18px] font-bold mb-2">가이드 보기</h3>
-                <p className="text-[14px] text-gray-600">
+                <h3 className="text-[16px] md:text-[18px] font-bold mb-2">
+                  가이드 보기
+                </h3>
+                <p className="text-[13px] md:text-[14px] text-gray-600">
                   Teamello 사용법과 팁을 확인하세요
                 </p>
               </Card>
             </Link>
 
             <Link href="/#faq">
-              <Card className="p-6 hover:border-[#748d00] transition-colors cursor-pointer">
+              <Card className="p-5 md:p-6 hover:border-[#748d00] transition-colors cursor-pointer">
                 <Icon
                   icon="mdi:chat-question"
-                  className="text-[40px] text-[#748d00] mb-3"
+                  className="text-[36px] md:text-[40px] text-[#748d00] mb-3"
                 />
-                <h3 className="text-[18px] font-bold mb-2">FAQ</h3>
-                <p className="text-[14px] text-gray-600">
+                <h3 className="text-[16px] md:text-[18px] font-bold mb-2">
+                  FAQ
+                </h3>
+                <p className="text-[13px] md:text-[14px] text-gray-600">
                   자주 묻는 질문들을 확인하세요
                 </p>
               </Card>
             </Link>
 
             <Link href="https://www.instagram.com/woox1jin_/" target="_blank">
-              <Card className="p-6 hover:border-[#0056a4] transition-colors cursor-pointer">
+              <Card className="p-5 md:p-6 hover:border-[#0056a4] transition-colors cursor-pointer">
                 <Icon
                   icon="mdi:email"
-                  className="text-[40px] text-[#0056a4] mb-3"
+                  className="text-[36px] md:text-[40px] text-[#0056a4] mb-3"
                 />
-                <h3 className="text-[18px] font-bold mb-2">문의하기</h3>
-                <p className="text-[14px] text-gray-600">
+                <h3 className="text-[16px] md:text-[18px] font-bold mb-2">
+                  문의하기
+                </h3>
+                <p className="text-[13px] md:text-[14px] text-gray-600">
                   도움이 필요하신가요? 언제든 연락주세요
                 </p>
               </Card>

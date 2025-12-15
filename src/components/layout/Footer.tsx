@@ -5,15 +5,16 @@ import Image from "next/image";
 export function Footer() {
   return (
     <footer className="bg-[#eaeaea] border-t border-gray-200">
-      <div className="max-w-[1400px] mx-auto px-8 py-12">
-        <div className="grid grid-cols-4 gap-2 mb-12">
-          <div>
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-8 md:py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-2 mb-8 md:mb-12">
+          <div className="col-span-1">
             <div className="flex items-center gap-2 mb-4">
               <Image
                 src="/logo/logo.svg"
                 alt="Teamello"
-                width={140}
-                height={140}
+                width={120}
+                height={120}
+                className="md:w-[140px]"
               />
             </div>
             <p className="text-[14px] text-gray-600">
@@ -21,8 +22,10 @@ export function Footer() {
             </p>
           </div>
 
-          <div>
-            <h3 className="text-[15px] font-bold text-gray-900 mb-4">제품</h3>
+          <div className="col-span-1">
+            <h3 className="text-[15px] font-bold text-gray-900 mb-3 md:mb-4">
+              제품
+            </h3>
             <ul className="space-y-2">
               <li>
                 <a
@@ -51,8 +54,10 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-[15px] font-bold text-gray-900 mb-4">회사</h3>
+          <div className="col-span-1">
+            <h3 className="text-[15px] font-bold text-gray-900 mb-3 md:mb-4">
+              회사
+            </h3>
             <ul className="space-y-2">
               <li>
                 <a
@@ -81,8 +86,10 @@ export function Footer() {
             </ul>
           </div>
 
-          <div>
-            <h3 className="text-[15px] font-bold text-gray-900 mb-4">법적</h3>
+          <div className="col-span-1">
+            <h3 className="text-[15px] font-bold text-gray-900 mb-3 md:mb-4">
+              법적
+            </h3>
             <ul className="space-y-2">
               <li>
                 <a
@@ -113,7 +120,9 @@ export function Footer() {
         </div>
 
         <div className="text-center text-[13px] text-gray-500 border-t pt-6">
-          © {new Date().getFullYear()} Teamello. All rights reserved. <br />
+          © {new Date().getFullYear()} Teamello. All rights reserved.
+          <br className="md:hidden" />
+          <span className="hidden md:inline"> </span>
           Making teams mellow, before conflicts begin.
         </div>
       </div>

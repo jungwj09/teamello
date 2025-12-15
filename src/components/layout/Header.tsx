@@ -29,6 +29,7 @@ export function Header() {
   const [authMode, setAuthMode] = useState<"login" | "signup">("login");
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -47,7 +48,6 @@ export function Header() {
 
     loadUser();
 
-    // Auth state 변화 감지
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
@@ -68,14 +68,25 @@ export function Header() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // 모바일 메뉴 열릴 때 스크롤 방지
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [mobileMenuOpen]);
+
   const handleLogin = () => {
     setAuthMode("login");
     setShowAuthModal(true);
+    setMobileMenuOpen(false);
   };
 
   const handleSignup = () => {
     setAuthMode("signup");
     setShowAuthModal(true);
+    setMobileMenuOpen(false);
   };
 
   const handleLogout = async () => {
@@ -83,6 +94,7 @@ export function Header() {
       await signOut();
       setUser(null);
       setUserProfile(null);
+      setMobileMenuOpen(false);
       router.push("/");
     } catch (error) {
       console.error("Logout error:", error);
@@ -99,19 +111,20 @@ export function Header() {
   return (
     <>
       <header className="bg-[#eaeaea] border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-[1400px] mx-auto px-4 py-2 flex items-center">
-          <div className="flex-1">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-2 flex items-center">
+          <div className="flex-1 md:flex-initial">
             <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/logo/logo.svg"
                 alt="Teamello"
-                width={140}
-                height={140}
+                width={120}
+                height={120}
+                className="md:w-[140px]"
               />
             </Link>
           </div>
 
-          <nav className="flex items-center gap-12 flex-1 justify-center">
+          <nav className="hidden md:flex items-center gap-12 flex-1 justify-center">
             {user ? (
               <>
                 <Link
@@ -159,7 +172,7 @@ export function Header() {
             )}
           </nav>
 
-          <div className="flex-1 flex justify-end items-center gap-4">
+          <div className="hidden md:flex flex-1 justify-end items-center gap-4">
             {user ? (
               <>
                 <div className="flex items-center gap-2 px-4 py-2">
@@ -184,7 +197,102 @@ export function Header() {
               </>
             )}
           </div>
+
+          {/* 햄버거 메뉴 */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 text-gray-700"
+            aria-label="메뉴"
+          >
+            <Icon
+              icon={mobileMenuOpen ? "mdi:close" : "mdi:menu"}
+              className="text-[28px]"
+            />
+          </button>
         </div>
+
+        {mobileMenuOpen && (
+          <div className="md:hidden fixed inset-0 top-[60px] bg-white z-40 overflow-y-auto">
+            <div className="px-4 py-6 space-y-4">
+              {user ? (
+                <>
+                  <div className="pb-4 border-b border-gray-200">
+                    <p className="text-[16px] font-bold text-gray-900">
+                      {userName} 님
+                    </p>
+                    <p className="text-[13px] text-gray-600">{user.email}</p>
+                  </div>
+                  <Link
+                    href="/"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block py-3 text-[16px] ${
+                      isHomePage
+                        ? "text-[#0056a4] font-medium"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    홈
+                  </Link>
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={`block py-3 text-[16px] ${
+                      pathname === "/dashboard"
+                        ? "text-[#0056a4] font-medium"
+                        : "text-gray-700"
+                    }`}
+                  >
+                    대시보드
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full py-3 text-left text-[16px] text-red-600"
+                  >
+                    로그아웃
+                  </button>
+                </>
+              ) : (
+                <>
+                  <a
+                    href="#features"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-3 text-[16px] text-gray-700"
+                  >
+                    기능
+                  </a>
+                  <a
+                    href="#process"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-3 text-[16px] text-gray-700"
+                  >
+                    프로세스
+                  </a>
+                  <a
+                    href="#reviews"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block py-3 text-[16px] text-gray-700"
+                  >
+                    후기
+                  </a>
+                  <div className="pt-4 border-t border-gray-200 space-y-3">
+                    <button
+                      onClick={handleLogin}
+                      className="w-full py-3 text-[16px] text-gray-700 border border-gray-200 rounded-lg"
+                    >
+                      로그인
+                    </button>
+                    <button
+                      onClick={handleSignup}
+                      className="w-full py-3 text-[16px] bg-[#0056a4] text-white rounded-lg"
+                    >
+                      회원가입
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </header>
 
       <AuthModal
