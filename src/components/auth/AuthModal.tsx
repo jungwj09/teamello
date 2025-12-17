@@ -90,7 +90,7 @@ export function AuthModal({
 
   return (
     <div
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      className="fixed inset-0 bg-[#fafafa] bg-opacity-50 flex items-center justify-center z-50 p-4"
       onClick={handleOverlayClick}
     >
       <Card className="w-full max-w-md p-6 md:p-8 relative max-h-[90vh] overflow-y-auto">
