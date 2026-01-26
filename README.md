@@ -1,3 +1,3 @@
 # Teamello
 
-AI와 함께 팀플 갈등을 미리 예방하세요
+[2025 제1회 SCSC 온라인 해커톤](https://scsc-hackathon.vercel.app/) 3등(서울대학교 SCSC 회장상) 수상작
