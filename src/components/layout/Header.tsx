@@ -106,25 +106,25 @@ export function Header() {
   return (
     <>
       <header className="bg-[#eaeaea] border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-2 flex items-center">
-          <div className="w-[140px]">
-            <Link href="/" className="flex items-center gap-2">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 h-16 md:h-20 flex items-center justify-between">
+          <div className="flex-shrink-0">
+            <Link href="/" className="flex items-center">
               <Image
                 src="/logo/logo.svg"
                 alt="Teamello"
-                width={120}
-                height={120}
-                className="md:w-[140px]"
+                width={100}
+                height={32}
+                className="w-[100px] md:w-[120px]"
               />
             </Link>
           </div>
 
-          <nav className="hidden md:flex items-center gap-12 flex-1 justify-center">
+          <nav className="hidden md:flex items-center gap-8 lg:gap-12 absolute left-1/2 -translate-x-1/2">
             {user ? (
               <>
                 <Link
                   href="/"
-                  className={`text-[15px] ${
+                  className={`text-[15px] whitespace-nowrap ${
                     isHomePage
                       ? "text-[#0056a4] font-medium"
                       : "text-gray-700 hover:text-gray-900"
@@ -134,7 +134,7 @@ export function Header() {
                 </Link>
                 <Link
                   href="/dashboard"
-                  className={`text-[15px] ${
+                  className={`text-[15px] whitespace-nowrap ${
                     pathname === "/dashboard"
                       ? "text-[#0056a4] font-medium"
                       : "text-gray-700 hover:text-gray-900"
@@ -147,19 +147,19 @@ export function Header() {
               <>
                 <a
                   href="#features"
-                  className="text-[15px] text-gray-700 hover:text-gray-900"
+                  className="text-[15px] text-gray-700 hover:text-gray-900 whitespace-nowrap"
                 >
                   기능
                 </a>
                 <a
                   href="#process"
-                  className="text-[15px] text-gray-700 hover:text-gray-900"
+                  className="text-[15px] text-gray-700 hover:text-gray-900 whitespace-nowrap"
                 >
                   프로세스
                 </a>
                 <a
                   href="#reviews"
-                  className="text-[15px] text-gray-700 hover:text-gray-900"
+                  className="text-[15px] text-gray-700 hover:text-gray-900 whitespace-nowrap"
                 >
                   후기
                 </a>
@@ -167,27 +167,22 @@ export function Header() {
             )}
           </nav>
 
-          <div className="hidden md:flex items-center gap-4 w-[140px] justify-end">
+          <div className="hidden md:flex items-center gap-3 flex-shrink-0">
             {user ? (
               <>
-                <div className="flex items-center gap-2 px-4 py-2">
-                  <span className="text-[14px] text-gray-700 font-medium">
-                    {userName} 님
-                  </span>
-                </div>
-                <Button onClick={handleLogout}>
-                  <Icon icon="mdi:logout" className="font-medium" />
+                <span className="text-[14px] text-gray-700 font-medium mr-2">
+                  {userName} 님
+                </span>
+                <Button onClick={handleLogout} variant="outline">
+                  <Icon icon="mdi:logout" className="text-lg" />
                   로그아웃
                 </Button>
               </>
             ) : (
               <>
-                <button
-                  onClick={handleLogin}
-                  className="text-[15px] text-gray-700 hover:text-gray-900"
-                >
+                <Button onClick={handleLogin} variant="outline">
                   로그인
-                </button>
+                </Button>
                 <Button onClick={handleSignup}>회원가입</Button>
               </>
             )}
@@ -195,7 +190,7 @@ export function Header() {
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-gray-700 ml-auto"
+            className="md:hidden p-2 text-gray-700 flex-shrink-0"
             aria-label="메뉴"
           >
             <Icon
@@ -206,7 +201,7 @@ export function Header() {
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden fixed inset-0 top-[60px] bg-white z-40 overflow-y-auto">
+          <div className="md:hidden fixed inset-0 top-16 bg-white z-40 overflow-y-auto">
             <div className="px-4 py-6 space-y-4">
               {user ? (
                 <>
@@ -214,9 +209,7 @@ export function Header() {
                     <p className="text-[16px] font-bold text-gray-900">
                       {userName} 님
                     </p>
-                    <p className="text-[13px] text-gray-600">
-                      {user?.email}
-                    </p>
+                    <p className="text-[13px] text-gray-600">{user?.email}</p>
                   </div>
                   <Link
                     href="/"
