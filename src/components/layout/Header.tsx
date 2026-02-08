@@ -68,13 +68,8 @@ export function Header() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // 모바일 메뉴 열릴 때 스크롤 방지
   useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
+    document.body.style.overflow = mobileMenuOpen ? "hidden" : "unset";
   }, [mobileMenuOpen]);
 
   const handleLogin = () => {
@@ -112,7 +107,7 @@ export function Header() {
     <>
       <header className="bg-[#eaeaea] border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-2 flex items-center">
-          <div className="flex-1 md:flex-initial">
+          <div className="w-[140px]">
             <Link href="/" className="flex items-center gap-2">
               <Image
                 src="/logo/logo.svg"
@@ -172,7 +167,7 @@ export function Header() {
             )}
           </nav>
 
-          <div className="hidden md:flex flex-1 justify-end items-center gap-4">
+          <div className="hidden md:flex items-center gap-4 w-[140px] justify-end">
             {user ? (
               <>
                 <div className="flex items-center gap-2 px-4 py-2">
@@ -198,10 +193,9 @@ export function Header() {
             )}
           </div>
 
-          {/* 햄버거 메뉴 */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-gray-700"
+            className="md:hidden p-2 text-gray-700 ml-auto"
             aria-label="메뉴"
           >
             <Icon
@@ -220,27 +214,21 @@ export function Header() {
                     <p className="text-[16px] font-bold text-gray-900">
                       {userName} 님
                     </p>
-                    <p className="text-[13px] text-gray-600">{user.email}</p>
+                    <p className="text-[13px] text-gray-600">
+                      {user?.email}
+                    </p>
                   </div>
                   <Link
                     href="/"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`block py-3 text-[16px] ${
-                      isHomePage
-                        ? "text-[#0056a4] font-medium"
-                        : "text-gray-700"
-                    }`}
+                    className="block py-3 text-[16px]"
                   >
                     홈
                   </Link>
                   <Link
                     href="/dashboard"
                     onClick={() => setMobileMenuOpen(false)}
-                    className={`block py-3 text-[16px] ${
-                      pathname === "/dashboard"
-                        ? "text-[#0056a4] font-medium"
-                        : "text-gray-700"
-                    }`}
+                    className="block py-3 text-[16px]"
                   >
                     대시보드
                   </Link>
@@ -274,6 +262,7 @@ export function Header() {
                   >
                     후기
                   </a>
+
                   <div className="pt-4 border-t border-gray-200 space-y-3">
                     <button
                       onClick={handleLogin}
